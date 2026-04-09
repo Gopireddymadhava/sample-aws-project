@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Default Maven'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Gopireddymadhava/sample-aws-project.git'
+            }
+        }
+
+        stage('Build and SonarQube Analysis') {
+            steps {
+                sh 'chmod +x mvnw'
+                withSonarQubeEnv('SonarQube') {
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=Onix-Website-Scan'
+                }
+            }
+        }
+    }
+}
